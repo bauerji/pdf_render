@@ -17,7 +17,8 @@ Django app for rendering PDF files into PNG images
 
 
 ## Tests
-### Locally (running postgresql is required)
+### Locally
+Base in mind that you have to have access to a `PostgreSQL` server and also `poppler` installed
 - set ENV with postgresql conf: `POSTGRES_HOST`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`, `POSTGRES_PORT`
 - run `python3 -m pytest`
 
