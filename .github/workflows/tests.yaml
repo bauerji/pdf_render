@@ -30,6 +30,9 @@ jobs:
         with:
           python-version: 3.9
 
+      - name: Install poppler
+        run: sudo apt-get install -y poppler-utils
+
       - name: Upgrade pip
         run: |
           python3 -m pip install --upgrade pip
