@@ -12,7 +12,7 @@ Django app for rendering PDF files into PNG images
     - returns JSON { “id”: “<DOCUMENT_ID>? }
 - GET /documents/<DOCUMENT_ID>/
     - returns JSON { “status”: “processing/done”, “n_pages”: NUMBER }
-- GET /documents/<DOCUMENT_ID>/pages/<NUMBER>/
+- GET /documents/<DOCUMENT_ID>/pages/<PAGE_NUMBER>/
     - returns rendered image png
 
 
