@@ -1,0 +1,26 @@
+version: "3"
+services:
+    test_db:
+        image: postgres
+        container_name: postgres_db_tests
+        environment:
+            - POSTGRES_USER=user
+            - POSTGRES_PASSWORD=pass
+            - POSTGRES_DB=pdf_render
+        ports:
+        - 5432:5432
+        restart: always
+    test_app:
+      build:
+        context: ..
+        dockerfile: tests/Dockerfile
+      container_name: app_tests
+      command: bash -c 'while !</dev/tcp/test_db/5432; do sleep 1; done; python3 -m pytest'
+      environment:
+        - POSTGRES_HOST=test_db
+        - POSTGRES_USER=user
+        - POSTGRES_PASSWORD=pass
+        - POSTGRES_DB=pdf_render
+        - POSTGRES_PORT=5432
+      depends_on:
+        - test_db
