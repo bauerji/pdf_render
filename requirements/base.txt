@@ -1,0 +1,8 @@
+Django~=3.1.6
+dramatiq[rabbitmq]~=1.10
+django-dramatiq~=0.9.1
+django-environ~=0.4.5
+djangorestframework~=3.12.2
+psycopg2~=2.8.6
+Pillow~=8.1.0
+pdf2image~=1.14.0

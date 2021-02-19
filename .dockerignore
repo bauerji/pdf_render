@@ -1,0 +1,5 @@
+/docker/*.Dockerfile
+/venv/
+/.env
+docker-compose.yaml
+*.png

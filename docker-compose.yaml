@@ -1,0 +1,70 @@
+version: "3"
+services:
+    db:
+        image: postgres
+        container_name: postgres_db
+        environment:
+            - POSTGRES_USER=${DB_USER}
+            - POSTGRES_PASSWORD=${DB_PASSWORD}
+            - POSTGRES_DB=${DB_NAME}
+        ports:
+            - "${DB_PORT}:5432"
+        restart: always
+    rabbitmq:
+      image: rabbitmq
+      restart: always
+      ports:
+      - 5672:5672
+      environment:
+        - RABBITMQ_DEFAULT_USER=${RMQ_USER}
+        - RABBITMQ_DEFAULT_PASS=${RMQ_PASSWORD}
+    app:
+      build:
+        context: .
+        dockerfile: docker/app.Dockerfile
+      ports:
+      - 8000:8000
+      command: ./docker/entrypoint.sh
+      environment:
+        - POSTGRES_HOST=db
+        - POSTGRES_USER=${DB_USER}
+        - POSTGRES_PASSWORD=${DB_PASSWORD}
+        - POSTGRES_DB=${DB_NAME}
+        - POSTGRES_PORT=${DB_PORT}
+        - RMQ_HOST=rabbitmq
+        - RMQ_PORT=5672
+        - RMQ_USER=${RMQ_USER}
+        - RMQ_PASSWORD=${RMQ_PASSWORD}
+        - IMAGE_STORAGE_PATH=${IMAGE_STORAGE_PATH}
+        - DJANGO_DEBUG=${DJANGO_DEBUG}
+        - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+      volumes:
+        - image_storage:${IMAGE_STORAGE_PATH}
+      depends_on:
+        - rabbitmq
+        - db
+    worker:
+      build:
+        context: .
+        dockerfile: docker/dramatiq.Dockerfile
+      command: python3 manage.py rundramatiq
+      environment:
+        - POSTGRES_HOST=db
+        - POSTGRES_USER=${DB_USER}
+        - POSTGRES_PASSWORD=${DB_PASSWORD}
+        - POSTGRES_DB=${DB_NAME}
+        - POSTGRES_PORT=${DB_PORT}
+        - RMQ_HOST=rabbitmq
+        - RMQ_PORT=5672
+        - RMQ_USER=${RMQ_USER}
+        - RMQ_PASSWORD=${RMQ_PASSWORD}
+        - IMAGE_STORAGE_PATH=${IMAGE_STORAGE_PATH}
+        - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+      depends_on:
+        - rabbitmq
+        - db
+        - app
+      volumes:
+        - image_storage:${IMAGE_STORAGE_PATH}
+volumes:
+  image_storage:
